@@ -1,0 +1,49 @@
+scalar country
+scalar date
+scalar state
+
+schema {
+    query: Query
+}
+
+type Race {
+    race_id: Int
+    name: String
+    last_date: date
+    last_end_date: date
+    next_date: date
+    next_end_date: date
+    is_draft_race: Boolean
+    is_private_race: Boolean
+    is_registration_open: Boolean
+    created: String
+    last_modified: date
+    description: String
+    url: String
+    external_race_url: String
+    external_results_url: String
+    fb_page_id: Int
+    fb_event_id: Int
+    address: [Address]
+    timezone:String
+    logo_url: String
+    real_time_notifications_enabled: Boolean
+}
+
+type Address {
+    street: String
+    street2: String
+    city: String
+    state: state
+    zipcode: String
+    country_code: country
+}
+
+type RacesResult {
+    success: Boolean!
+    errors: [String]
+    Races: [Race]
+}
+type Query {
+    Races: RacesResult
+}
