@@ -45,5 +45,5 @@ type RacesResult {
     Races: [Race]
 }
 type Query {
-    Races: RacesResult
+    Races: RacesResult!
 }
