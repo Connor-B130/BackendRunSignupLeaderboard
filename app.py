@@ -7,12 +7,12 @@ from api.schema import resolve_races
 import redis
 
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-
+explorer_html = ExplorerGraphiQL().html(None)
 #PLAYGROUND_HTML = ExplorerPlayground(title="Cool API").html(None)
 
 query = ObjectType("Query")
 
-query.set_field("Races", resolve_races)
+query.set_field("response", resolve_races)
 
 type_defs = load_schema_from_path("schema.graphql")
 type_defs = gql(type_defs)
@@ -22,7 +22,7 @@ schema = make_executable_schema(
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
-    return ExplorerGraphiQL, 200
+    return explorer_html, 200
 
 
 @app.route("/graphql", methods=["POST"])

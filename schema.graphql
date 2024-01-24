@@ -42,8 +42,13 @@ type Address {
 type RacesResult {
     success: Boolean!
     errors: [String]
-    Races: [Race]
+    result: [RaceResult]
 }
+
+type RaceResult {
+    race: Race
+}
+
 type Query {
-    Races: RacesResult!
+    response: RacesResult!
 }
