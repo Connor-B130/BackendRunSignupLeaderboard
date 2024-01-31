@@ -51,4 +51,5 @@ type RaceResult {
 
 type Query {
     response: RacesResult!
+    advancedResponse: RacesResult!
 }

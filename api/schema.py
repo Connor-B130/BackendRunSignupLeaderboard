@@ -8,8 +8,6 @@ baseURL = "https://runsignup.com/Rest/"
 
 def resolve_races(*_):
     try:
-        with open('dummy.json', "r",encoding='utf-8') as json_data:
-            d = json.load(json_data)
         response = urllib.request.urlopen(baseURL + 'races?format=json')
         data = response.read()
         #print(data)
@@ -19,11 +17,32 @@ def resolve_races(*_):
         #print(dict["races"])
         payload = {
             "success": True,
-            "result": dict["races"]
+            "result": dict['races']
         }
     except Exception as error:
         payload = {
             "success": False,
             "errors": [str(error)]
         }
+    return payload
+
+#this resolve will accept a name parameter
+#if a parameter is sent through this function will run, and if the fields are blank
+#then the resolve_races function will run.
+def resolve_AdvancedRaces(*_):
+    try:
+        response = urllib.request.urlopen(baseURL + 'races?format=json&name=ConnorBennett')
+        data = response.read()
+        dict = json.loads(data)
+        payload = {
+            "success": True,
+            "result": dict['races']
+        }
+
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+
     return payload
