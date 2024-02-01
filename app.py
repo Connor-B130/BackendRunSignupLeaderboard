@@ -5,6 +5,7 @@ from ariadne.explorer import ExplorerGraphiQL
 from flask import request, jsonify
 from api.schema import resolve_races, resolve_AdvancedRaces
 import redis
+import json
 
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 explorer_html = ExplorerGraphiQL().html(None)

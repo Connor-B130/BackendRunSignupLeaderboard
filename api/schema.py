@@ -1,10 +1,6 @@
 import urllib.request, json
-from collections import namedtuple
 
 baseURL = "https://runsignup.com/Rest/"
-
-#def customRaceDecoder(racesDict):
-    #return namedtuple('X', racesDict.keys())(*racesDict.values())
 
 def resolve_races(*_):
     try:
@@ -19,6 +15,12 @@ def resolve_races(*_):
             "success": True,
             "result": dict['races']
         }
+
+        file_path = "races.json"
+
+        with open(file_path, "w") as file:
+            json.dump(dict['races'], file, indent=4)
+
     except Exception as error:
         payload = {
             "success": False,

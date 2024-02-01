@@ -1,6 +1,8 @@
 scalar country
 scalar date
 scalar state
+scalar run_boolean
+scalar long
 
 schema {
     query: Query
@@ -13,21 +15,21 @@ type Race {
     last_end_date: date
     next_date: date
     next_end_date: date
-    is_draft_race: Boolean
-    is_private_race: Boolean
-    is_registration_open: Boolean
+    is_draft_race: run_boolean
+    is_private_race: run_boolean
+    is_registration_open: run_boolean
     created: String
     last_modified: date
     description: String
     url: String
     external_race_url: String
     external_results_url: String
-    fb_page_id: Int
-    fb_event_id: Int
-    address: [Address]
+    fb_page_id: String
+    fb_event_id: long
+    address: Address
     timezone:String
     logo_url: String
-    real_time_notifications_enabled: Boolean
+    real_time_notifications_enabled: run_boolean
 }
 
 type Address {
