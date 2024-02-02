@@ -3,6 +3,7 @@ scalar date
 scalar state
 scalar run_boolean
 scalar long
+scalar price
 
 schema {
     query: Query
@@ -52,6 +53,7 @@ input RaceFilters {
     state: String
     city: String
     country_code: String
+    race_id: long
 }
 
 type RaceResult{
@@ -62,7 +64,71 @@ type RaceObject{
     race: Race
 }
 
+type SingleResult{
+    success: Boolean!
+    errors: [String]
+    result: RaceDict
+}
+
+type RaceDict{
+    race(filters: RaceFilters): RaceInfo
+}
+
+type RaceInfo{
+    race_id: Int
+    name: String
+    last_date: date
+    last_end_date: date
+    next_date: date
+    next_end_date: date
+    is_draft_race: run_boolean
+    is_private_race: run_boolean
+    is_registration_open: run_boolean
+    created: String
+    last_modified: date
+    description: String
+    url: String
+    external_race_url: String
+    external_results_url: String
+    fb_page_id: String
+    fb_event_id: long
+    address: Address
+    timezone:String
+    logo_url: String
+    can_use_registration_api: run_boolean
+    real_time_notifications_enabled: run_boolean
+    events: [Events]
+    sub_event_ids: [Int]
+    giveaway: String
+}
+
+type Events{
+    event_id: Int
+    race_event_days_id: Int
+    name: String
+    details: String
+    start_time: date
+    end_time: date
+    age_calc_base_date: date
+    registration_opens: date
+    event_type: String
+    distance: String
+    volunteer: run_boolean
+    require_dob: run_boolean
+    require_phone: run_boolean
+    registration_periods: [Periods]
+
+}
+
+type Periods{
+    registration_opens: date
+    registration_closes: date
+    race_fee: price
+    processing_fee: price
+}
+
 type Query {
     response: RacesResult!
     advancedResponse: RacesResult!
+    race_response: SingleResult!
 }

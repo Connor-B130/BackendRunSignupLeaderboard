@@ -46,3 +46,22 @@ def resolve_AdvancedRaces(_, info):
         }
 
     return payload
+
+def resolve_race(_, info):
+    variables = info.variable_values
+    try:
+        race_response = urllib.request.urlopen(baseURL + "race/" + variables["race_id"] + "?format=json")
+        data = race_response.read()
+        dict = json.loads(data)
+        payload = {
+            "success": True,
+            "result": dict
+        }
+
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+
+    return payload
