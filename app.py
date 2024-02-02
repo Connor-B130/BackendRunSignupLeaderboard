@@ -1,15 +1,14 @@
 from api import app
+from apscheduler.schedulers.background import BackgroundScheduler
 from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType, gql
 from ariadne.explorer import ExplorerGraphiQL
 from flask import request, jsonify
 from api.schema import resolve_races, resolve_AdvancedRaces
-import redis
+from queries import races_query
 import json
 
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 explorer_html = ExplorerGraphiQL().html(None)
-#PLAYGROUND_HTML = ExplorerPlayground(title="Cool API").html(None)
 
 query = ObjectType("Query")
 
@@ -21,6 +20,20 @@ type_defs = gql(type_defs)
 schema = make_executable_schema(
     type_defs, query, snake_case_fallback_resolvers
 )
+
+def update_local():
+     
+    # #file_path = "races.json"
+
+    # with open(file_path, "w") as file:
+    #         json.dump(data, file, indent=4)
+
+    print("Running every 30 seconds")
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(update_local, 'interval', seconds = 30)
+
+scheduler.start()
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
@@ -35,7 +48,7 @@ def graphql_server():
         schema,
         data,
         context_value=request,
-        debug=app.debug
+        debug=app.debug,
     )
 
     status_code = 200 if success else 400

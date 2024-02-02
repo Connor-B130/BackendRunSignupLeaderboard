@@ -44,10 +44,21 @@ type Address {
 type RacesResult {
     success: Boolean!
     errors: [String]
-    result: [RaceResult]
+    result: RaceResult
 }
 
-type RaceResult {
+input RaceFilters {
+    name: String
+    state: String
+    city: String
+    country_code: String
+}
+
+type RaceResult{
+    races(filters: RaceFilters): [RaceObject]
+}
+
+type RaceObject{
     race: Race
 }
 
