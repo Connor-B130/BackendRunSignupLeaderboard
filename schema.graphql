@@ -54,6 +54,7 @@ input RaceFilters {
     city: String
     country_code: String
     race_id: long
+    start_date: date
 }
 
 type RaceResult{
@@ -127,8 +128,68 @@ type Periods{
     processing_fee: price
 }
 
+type IndividualResults{
+    success: Boolean!
+    errors: [String]
+    result: IndividualEventResults
+}
+
+type IndividualEventResults{
+    individual_results_sets: [EventResults]
+}
+
+type EventResults{
+    individual_result_set_id: long
+    individual_result_set_name: String
+    public_results: run_boolean
+    sort_order: Int
+    results_source_name: String
+    results_source_url: String
+    preliminary_results: run_boolean
+    pace_type: run_boolean
+    team_column_display_type: Int
+    alt_event_ids: [long]
+    results_headers: Headers
+    results: [Results]
+}
+
+type Headers{
+    result_id: String
+    place: String
+    bib: String
+    first_name: String
+    last_name: String
+    gender: String
+    city: String
+    state: String
+    country_code: String
+    clock_time: String
+    chip_time: String
+    pace: String
+    age: String
+    age_percentage: String
+}
+
+type Results{
+    result_id: long
+    place: Int
+    bib: Int
+    first_name: String
+    last_name: String
+    gender: String
+    city: String
+    state: String
+    country_code: String
+    clock_time: String
+    chip_time: String
+    pace: String
+    age: Int
+    age_percentage: String
+}
+
 type Query {
     response: RacesResult!
     advancedResponse: RacesResult!
     race_response: SingleResult!
+    individual_results: IndividualResults
 }

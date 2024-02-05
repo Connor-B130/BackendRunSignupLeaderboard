@@ -4,8 +4,8 @@ from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType, gql
 from ariadne.explorer import ExplorerGraphiQL
 from flask import request, jsonify
-from api.schema import resolve_races, resolve_AdvancedRaces, resolve_race
-from queries import races_query
+from api.schema import resolve_races, resolve_AdvancedRaces, resolve_race, resolve_event_results
+#from queries import races_query
 import json
 
 explorer_html = ExplorerGraphiQL().html(None)
@@ -15,6 +15,7 @@ query = ObjectType("Query")
 query.set_field("response", resolve_races)
 query.set_field("advancedResponse", resolve_AdvancedRaces)
 query.set_field("race_response", resolve_race)
+query.set_field("individual_results", resolve_event_results)
 
 type_defs = load_schema_from_path("schema.graphql")
 type_defs = gql(type_defs)
