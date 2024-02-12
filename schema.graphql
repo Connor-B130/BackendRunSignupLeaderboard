@@ -55,6 +55,7 @@ input RaceFilters {
     country_code: String
     race_id: long
     start_date: date
+    event_id: long
 }
 
 type RaceResult{
@@ -135,7 +136,7 @@ type IndividualResults{
 }
 
 type IndividualEventResults{
-    individual_results_sets: [EventResults]
+    individual_results_sets(filters: RaceFilters): [EventResults]
 }
 
 type EventResults{
