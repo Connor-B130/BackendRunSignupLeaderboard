@@ -56,6 +56,7 @@ input RaceFilters {
     race_id: long
     start_date: date
     event_id: long
+    team_result_set_id: long
 }
 
 type RaceResult{
@@ -186,11 +187,62 @@ type Results{
     pace: String
     age: Int
     age_percentage: String
+    group_team_name: String
 }
+
+type TeamResultsQuery{
+    success: Boolean!
+    errors: [String]
+    result(filters: RaceFilters): [TeamResultsSets]
+}
+
+type TeamResultsSets{
+    team_result_set_id: long
+    race_event_days_id: Int
+    event_ids: [Int]
+    team_result_set_name: String
+    public_results: run_boolean
+    preliminary_results: run_boolean
+    results_source_url: String
+    result_questions_contact_email: String
+    result_questions_url: String
+    pace_type: run_boolean
+    time_num_decimals: Int
+    total_distance_units: Int
+    has_elevation_gain: run_boolean
+    nondistance_tally_field_label: Int
+    num_counted_finishers: Int
+    display_under_over_team_size_scores: run_boolean
+    sort_order: Int
+    individual_result_set_ids: [Int]
+}
+
+type TeamScoresQuery{
+    success: Boolean!
+    errors: [String]
+    result(filters: RaceFilters): [TeamScores]
+}
+
+type TeamScores{
+    results_team_id: long
+    place: Int
+    place_display_type: Int
+    score: Int
+    avg_pace_in_ms: long
+    clock_time_in_ms: long
+    chip_time_in_ms: long
+    results_team_name: String
+    results_team_bib: long
+    results_team_gender: String
+    race_group_id: long
+}
+
 
 type Query {
     response: RacesResult!
     advancedResponse: RacesResult!
     race_response: SingleResult!
     individual_results: IndividualResults
+    team_results_sets: TeamResultsQuery
+    team_scores: TeamScoresQuery
 }
