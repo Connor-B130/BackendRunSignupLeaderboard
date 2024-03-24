@@ -58,7 +58,7 @@ def resolve_race(_, info):
         #team_dict = json.loads(team_data)
         payload = {
             "success": True,
-            "result": dict,
+            "result": dict
         }
 
     except Exception as error:
@@ -70,23 +70,60 @@ def resolve_race(_, info):
     return payload
 
 def resolve_event_results(_, info):
+    from app import watchlist
+    
     variables = info.variable_values
     try:
-        results_response =  urllib.request.urlopen(baseURL + "race/" + variables["race_id"] + "/results/get-results?format=json&event_id=" + variables["event_id"] + + "&results_per_page=10000")
+        results_response =  urllib.request.urlopen(baseURL + "race/" + variables["race_id"] + "/results/get-results?format=json&event_id=" + variables["event_id"] + "&results_per_page=2500")
         
         data = results_response.read()
         dict = json.loads(data)
-       
+
         payload = {
             "success": True,
             "result": dict
         }
-
     except Exception as error:
         payload = {
             "success": False,
             "errors": [str(error)]
         }
+
+    # if watchlist[variables["race_id"]][variables["event_id"]]:
+    #     watchlist[variables["race_id"]][variables["event_id"]] += 1
+    # else:  
+    #     temp = {
+    #         ("" + variables["race_id"]): {
+    #             ("" + variables["event_id"]): 1
+    #         }
+    #     }
+    #     watchlist = watchlist + temp
+        
+    race_id = variables["race_id"]
+    event_id = variables["event_id"]
+    
+    # Check if race_id exists in watchlist
+    if race_id in watchlist:
+        race_results = watchlist[race_id]
+        # Check if event_id exists in race_results
+        if event_id in race_results:
+            watchlist[race_id][event_id] += 1
+        else:
+            temp = {
+                ("" + variables["race_id"]): {
+                     ("" + variables["event_id"]): 1
+                }
+            }
+            watchlist.update(temp)
+    else:
+        temp = {
+                ("" + variables["race_id"]): {
+                     ("" + variables["event_id"]): 1
+                }
+            }
+        watchlist.update(temp)
+
+    
     return payload
 
 def resolve_team_results(_, info):
@@ -100,7 +137,6 @@ def resolve_team_results(_, info):
             "success": True,
             "result": dict
         }
-        print(payload)
     except Exception as error:
         payload = {
             "success": False,

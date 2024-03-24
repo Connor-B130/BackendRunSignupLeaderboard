@@ -190,7 +190,7 @@ team_names_and_scores_query = """query fetchTeamResultsSets($race_id: long!, $te
   }
 }"""
 
-updated_events_and_teams_query = """query fetchTeam($race_id: long!) {
+updated_events_and_teams_query = """query fetchTeamIDandEvents($race_id: long!) {
   team_results_sets{
     success
     errors
