@@ -4,7 +4,10 @@ from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType, gql
 from ariadne.explorer import ExplorerGraphiQL
 from flask import request, jsonify
-from api.schema import resolve_races, resolve_AdvancedRaces, resolve_race, resolve_event_results, resolve_team_results, resolve_team_ids_and_names, resolve_update_results, resolve_frontend_call
+from api.schema import resolve_races, resolve_AdvancedRaces, \
+    resolve_race, resolve_event_results, resolve_team_results, \
+    resolve_team_ids_and_names, resolve_update_results, \
+    resolve_frontend_call, resolve_update_teams
 #from queries import races_query
 import json
 
@@ -13,6 +16,7 @@ explorer_html = ExplorerGraphiQL().html(None)
 query = ObjectType("Query")
 
 watchlist = {}
+watchlist_teams = {}
 
 query.set_field("response", resolve_races)
 query.set_field("advancedResponse", resolve_AdvancedRaces)
@@ -41,8 +45,16 @@ def update_local():
         json.dump(payload, json_file, indent=4)
 
     print(watchlist)
+        
+    # payload_team = {}
+    # team_file_path = "team_results.json"
 
-    print("Running every 30 seconds")
+    # for race in watchlist_teams:
+    #     for teams in watchlist_teams[race]:
+    #         payload_team.update(resolve_update_teams(race, teams))
+
+    # with open(team_file_path, "w") as json_file:
+    #     json.dump(payload_team, json_file, indent=4)
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_local, 'interval', seconds = 10)
