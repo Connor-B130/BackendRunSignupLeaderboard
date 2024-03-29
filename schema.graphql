@@ -237,6 +237,12 @@ type TeamScores{
     race_group_id: long
 }
 
+type FrontendCall{
+    success: Boolean!
+    errors: [String]
+    result: IndividualEventResults
+}
+
 
 type Query {
     response: RacesResult!
@@ -245,4 +251,5 @@ type Query {
     individual_results: IndividualResults
     team_results_sets: TeamResultsQuery
     team_scores: TeamScoresQuery
+    frontend_call: FrontendCall
 }

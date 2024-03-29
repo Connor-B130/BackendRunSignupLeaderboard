@@ -1,5 +1,6 @@
 import urllib.request, json
 from urllib.parse import urlencode
+import base64
 
 baseURL = "https://runsignup.com/Rest/"
 
@@ -88,16 +89,6 @@ def resolve_event_results(_, info):
             "success": False,
             "errors": [str(error)]
         }
-
-    # if watchlist[variables["race_id"]][variables["event_id"]]:
-    #     watchlist[variables["race_id"]][variables["event_id"]] += 1
-    # else:  
-    #     temp = {
-    #         ("" + variables["race_id"]): {
-    #             ("" + variables["event_id"]): 1
-    #         }
-    #     }
-    #     watchlist = watchlist + temp
         
     race_id = variables["race_id"]
     event_id = variables["event_id"]
@@ -123,7 +114,6 @@ def resolve_event_results(_, info):
             }
         watchlist.update(temp)
 
-    
     return payload
 
 def resolve_team_results(_, info):
@@ -174,10 +164,51 @@ def resolve_team_ids_and_names(_,info):
             "success": True,
             "result": matching_list
         }
-        print(payload)
+        #print(payload)
     except Exception as error:
         payload = {
             "success": False,
             "errors": [str(error)]
         }
     return payload
+
+def resolve_update_results(race, event):
+    print(race)
+    print(event)
+    try:
+        results_response =  urllib.request.urlopen(baseURL + "race/" + race + "/results/get-results?format=json&event_id=" + event + "&results_per_page=2500")
+        
+        data = results_response.read()
+        dict = json.loads(data)
+
+        payload = { 
+            ""+ race + event: dict
+        }
+    except Exception as error:
+        print(error)
+    
+    return payload
+
+def resolve_frontend_call(_, info):
+    variables = info.variable_values
+    try:
+        with open('individual_results.json', 'r') as results:
+            data = json.load(results)
+            race_event = variables['race_id'] + variables['event_id']
+            dict = data.get(race_event)
+            
+        payload = {
+            "success": True,
+            "result": dict
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+
+    print(payload)
+
+    return payload
+
+    

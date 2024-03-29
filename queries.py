@@ -259,3 +259,24 @@ updated_events_and_teams_query = """query fetchTeamIDandEvents($race_id: long!) 
     }
   }
 }"""
+
+individual_results_query_frontend = """
+query fetchTest($race_id: long!, $event_id: long!) {
+  frontend_call {
+    success
+    errors
+    result {
+      individual_results_sets(filters: {race_id: $race_id, event_id: $event_id}) {
+        individual_result_set_id
+      	results{
+          result_id
+          first_name
+          last_name
+          place
+          bib
+          chip_time
+        }
+      }
+    }
+  }
+}"""
