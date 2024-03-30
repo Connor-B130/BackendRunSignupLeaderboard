@@ -93,6 +93,7 @@ def resolve_event_results(_, info):
     race_id = variables["race_id"]
     event_id = variables["event_id"]
     
+
     # Check if race_id exists in watchlist
     if race_id in watchlist:
         race_results = watchlist[race_id]
@@ -100,12 +101,6 @@ def resolve_event_results(_, info):
         if event_id in race_results:
             watchlist[race_id][event_id] += 1
         else:
-            # temp = {
-            #     ("" + race_id): {
-            #          ("" + event_id): 1
-            #     }
-            # }
-            # watchlist.update(temp)
             watchlist[race_id][event_id] = 1
     else:
         temp = {
@@ -114,6 +109,24 @@ def resolve_event_results(_, info):
                 }
             }
         watchlist.update(temp)
+
+    #add race to json file
+    file_path = "individual_results.json"
+    
+    race_event = race_id + event_id
+
+    with open(file_path, "r+") as file:
+        try:
+            data = json.load(file)
+        except json.decoder.JSONDecodeError:
+            # Handle the case when the file is empty or contains invalid JSON
+            data = {}
+        
+
+        data.update({race_event: payload['result']})
+
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
 
     return payload
 
@@ -184,12 +197,7 @@ def resolve_team_ids_and_names(_,info):
         if team_result_set_id in race_results:
             watchlist_teams[race_id][team_result_set_id] += 1
         else:
-            temp = {
-                ("" + variables["race_id"]): {
-                     ("" + variables["team_result_set_id"]): 1
-                }
-            }
-            watchlist_teams.update(temp)
+            watchlist_teams[race_id][team_result_set_id] = 1
     else:
         temp = {
                 ("" + variables["race_id"]): {

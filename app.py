@@ -57,7 +57,7 @@ def update_local():
     #     json.dump(payload_team, json_file, indent=4)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(update_local, 'interval', seconds = 10)
+scheduler.add_job(update_local, 'interval', seconds = 30)
 
 scheduler.start()
 
