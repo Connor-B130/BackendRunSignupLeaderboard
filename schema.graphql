@@ -246,7 +246,7 @@ type FrontendCall{
 type TeamCall{
     success: Boolean!
     errors: [String]
-    result(filters: RaceFilters): TeamScores
+    result(filters: RaceFilters): [TeamScores]
 }
 
 type Query {

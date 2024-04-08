@@ -288,7 +288,7 @@ def resolve_frontend_team_call(_, info):
             data = json.load(results)
             race_teams = variables['race_id'] + variables['team_result_set_id']
             dict = data.get(race_teams)
-        
+
         payload =  {
             "success": True,
             "result": dict
@@ -298,3 +298,5 @@ def resolve_frontend_team_call(_, info):
             "success": False,
             "errors": [str(error)]
         }
+
+    return payload
