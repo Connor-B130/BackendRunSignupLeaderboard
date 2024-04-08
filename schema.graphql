@@ -243,6 +243,11 @@ type FrontendCall{
     result: IndividualEventResults
 }
 
+type TeamCall{
+    success: Boolean!
+    errors: [String]
+    result(filters: RaceFilters): TeamScores
+}
 
 type Query {
     response: RacesResult!
@@ -252,4 +257,5 @@ type Query {
     team_results_sets: TeamResultsQuery
     team_scores: TeamScoresQuery
     frontend_call: FrontendCall
+    team_frontend_call: TeamCall
 }

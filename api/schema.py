@@ -250,8 +250,7 @@ def resolve_update_teams(race, team_set):
 
         #print(matching_list)
         payload = {
-            "success": True,
-            "result": matching_list
+            "" + race + team_set: matching_list
         }
         #print(payload)
     except Exception as error:
@@ -281,3 +280,21 @@ def resolve_frontend_call(_, info):
         }
 
     return payload
+
+def resolve_frontend_team_call(_, info):
+    variables = info.variable_values
+    try:
+        with open('team_results.json', 'r') as results:
+            data = json.load(results)
+            race_teams = variables['race_id'] + variables['team_result_set_id']
+            dict = data.get(race_teams)
+        
+        payload =  {
+            "success": True,
+            "result": dict
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }

@@ -7,7 +7,7 @@ from flask import request, jsonify
 from api.schema import resolve_races, resolve_AdvancedRaces, \
     resolve_race, resolve_event_results, resolve_team_results, \
     resolve_team_ids_and_names, resolve_update_results, \
-    resolve_frontend_call, resolve_update_teams
+    resolve_frontend_call, resolve_update_teams, resolve_frontend_team_call
 #from queries import races_query
 import json
 
@@ -25,6 +25,7 @@ query.set_field("individual_results", resolve_event_results)
 query.set_field("team_results_sets", resolve_team_results)
 query.set_field("team_scores", resolve_team_ids_and_names)
 query.set_field("frontend_call", resolve_frontend_call)
+query.set_field("team_frontend_call", resolve_frontend_team_call)
 
 type_defs = load_schema_from_path("schema.graphql")
 type_defs = gql(type_defs)
@@ -46,15 +47,17 @@ def update_local():
 
     print(watchlist)
         
-    # payload_team = {}
-    # team_file_path = "team_results.json"
+    payload_team = {}
+    team_file_path = "team_results.json"
 
-    # for race in watchlist_teams:
-    #     for teams in watchlist_teams[race]:
-    #         payload_team.update(resolve_update_teams(race, teams))
+    for race in watchlist_teams:
+        for teams in watchlist_teams[race]:
+            payload_team.update(resolve_update_teams(race, teams))
 
-    # with open(team_file_path, "w") as json_file:
-    #     json.dump(payload_team, json_file, indent=4)
+    with open(team_file_path, "w") as json_file:
+        json.dump(payload_team, json_file, indent=4)
+
+    print(watchlist_teams)
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_local, 'interval', seconds = 30)
@@ -80,14 +83,3 @@ def graphql_server():
     status_code = 200 if success else 400
     return jsonify(result), status_code
 
-@app.route("/disconnect", methods=["POST"])
-def disconnection(disconnect_list):
-    watchlist[disconnect_list["race_id"]][disconnect_list["event_id"]] -= 1
-
-    if watchlist[disconnect_list["race_id"]][disconnect_list["event_id"]] <= 0:
-        del watchlist[disconnect_list["race_id"]][disconnect_list["event_id"]]
-
-    #I am going to recieve a dictionary with the race id and event id and I will decrement 
-    #the global dictionary entry by one (That corresponds to those ids) after that I will 
-    #check the global dictionarys counter to se if it is zero. if it is I will take that 
-    #of the dictionary.
