@@ -280,3 +280,15 @@ query fetchTest($race_id: long!, $event_id: long!) {
     }
   }
 }"""
+
+team_results_query_frontend = """query fetchTeamResultsSets($race_id: long!, $team_result_set_id: long!) {
+  team_frontend_call {
+    success
+    errors
+    result(filters: {race_id: $race_id, team_result_set_id: $team_result_set_id}) {
+      results_team_name
+      place
+      score
+    }
+  }
+}"""
