@@ -1,6 +1,6 @@
+from datetime import datetime
 import urllib.request, json
 from urllib.parse import urlencode
-import base64
 
 baseURL = "https://runsignup.com/Rest/"
 
@@ -99,13 +99,13 @@ def resolve_event_results(_, info):
         race_results = watchlist[race_id]
         # Check if event_id exists in race_results
         if event_id in race_results:
-            watchlist[race_id][event_id] += 1
+            watchlist[race_id][event_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         else:
-            watchlist[race_id][event_id] = 1
+            watchlist[race_id][event_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     else:
         temp = {
                 ("" + variables["race_id"]): {
-                     ("" + variables["event_id"]): 1
+                     ("" + variables["event_id"]): datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 }
             }
         watchlist.update(temp)
@@ -195,16 +195,32 @@ def resolve_team_ids_and_names(_,info):
         race_results = watchlist_teams[race_id]
         # Check if event_id exists in race_results
         if team_result_set_id in race_results:
-            watchlist_teams[race_id][team_result_set_id] += 1
+            watchlist_teams[race_id][team_result_set_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         else:
-            watchlist_teams[race_id][team_result_set_id] = 1
+            watchlist_teams[race_id][team_result_set_id] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     else:
         temp = {
                 ("" + variables["race_id"]): {
-                     ("" + variables["team_result_set_id"]): 1
+                     ("" + variables["team_result_set_id"]): datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 }
             }
         watchlist_teams.update(temp)
+
+    file_path = "team_results.json"
+    
+    race_event = race_id + team_result_set_id
+    with open(file_path, "r+") as file:
+        try:
+            data = json.load(file)
+        except json.decoder.JSONDecodeError:
+            # Handle the case when the file is empty or contains invalid JSON
+            data = {}
+        
+
+        data.update({race_event: payload['result']})
+
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
 
     return payload
 
